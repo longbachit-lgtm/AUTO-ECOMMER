@@ -18,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({ apiKeyInput, apiKeyReady, onApiKeyChang
 
   return (
     <header className="w-full py-4 px-6 border-b border-gray-200 bg-white sticky top-0 z-50 shadow-sm">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap md:flex-nowrap">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-red-600 rounded-lg shadow-md shadow-red-500/20 text-white">
             <MagicIcon />
@@ -28,9 +28,9 @@ const Header: React.FC<HeaderProps> = ({ apiKeyInput, apiKeyReady, onApiKeyChang
 
           </div>
         </div>
-        <div className="hidden md:flex items-center gap-2">
+        <div className="flex items-center gap-2 mt-2 md:mt-0 w-full md:w-auto justify-end">
           {isEditing ? (
-            <>
+            <div className="flex items-center gap-2 w-full md:w-auto">
               <input
                 type="password"
                 value={apiKeyInput}
@@ -41,31 +41,31 @@ const Header: React.FC<HeaderProps> = ({ apiKeyInput, apiKeyReady, onApiKeyChang
                   }
                 }}
                 placeholder="Nhập Gemini API Key..."
-                className="px-3 py-1.5 border border-amber-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 outline-none w-64"
+                className="px-3 py-1.5 border border-amber-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 outline-none flex-1 md:w-64"
                 autoFocus
               />
               <button
                 onClick={handleSave}
-                className="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-medium transition-colors"
+                className="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-medium transition-colors whitespace-nowrap"
               >
                 Lưu
               </button>
               <button
                 onClick={() => setIsEditing(false)}
-                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition-colors"
+                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition-colors whitespace-nowrap"
               >
                 Hủy
               </button>
-            </>
+            </div>
           ) : apiKeyReady ? (
             <>
               <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-200">
                 <CheckIcon />
-                <span className="text-xs font-semibold text-green-700">API Key đã kết nối</span>
+                <span className="text-xs font-semibold text-green-700 whitespace-nowrap">API Key đã kết nối</span>
               </div>
               <button
                 onClick={() => setIsEditing(true)}
-                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition-colors"
+                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition-colors whitespace-nowrap"
               >
                 Đổi
               </button>
@@ -73,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({ apiKeyInput, apiKeyReady, onApiKeyChang
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="px-3 py-1.5 bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-700 hover:border-gray-300 rounded-lg text-xs font-medium transition-colors"
+              className="px-3 py-1.5 bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-700 hover:border-gray-300 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ml-auto"
             >
               Nhập API Key
             </button>

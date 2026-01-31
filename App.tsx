@@ -274,10 +274,7 @@ const App: React.FC = () => {
       return;
     }
 
-    if (!customPrompt.trim()) {
-      setGlobalError("Vui lòng nhập câu lệnh (prompt).");
-      return;
-    }
+
     if (!apiKeyReady) {
       await handleApiKeySelect();
       return;
@@ -291,7 +288,14 @@ const App: React.FC = () => {
     // Combine prompt
     let effectivePrompt = customPrompt;
     if (selectedStyle) {
-      effectivePrompt = `${customPrompt}. Style Directive: ${selectedStyle.promptModifier}`;
+      if (customPrompt.trim()) {
+        effectivePrompt = `${customPrompt}. Style Directive: ${selectedStyle.promptModifier}`;
+      } else {
+        effectivePrompt = `Create a creative concept based on this input image. Style Directive: ${selectedStyle.promptModifier}`;
+      }
+    } else if (!customPrompt.trim()) {
+      // No style and no prompt -> Default Mode
+      effectivePrompt = "Analyze this product image and generate 5 creative design variations. Focus on improving lighting, background, and overall aesthetic while keeping the core product identity.";
     }
 
     // Create 5 placeholders for Custom Mode
@@ -391,7 +395,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 text-gray-900 overflow-hidden font-sans">
+    <div className="flex flex-col h-screen bg-gray-50 text-gray-900 overflow-auto md:overflow-hidden font-sans">
       <Header
         apiKeyInput={apiKeyInput}
         apiKeyReady={apiKeyReady}
@@ -412,10 +416,10 @@ const App: React.FC = () => {
         onClose={() => setSelectedDetailItem(null)}
       />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 overflow-visible md:overflow-hidden">
 
         {/* --- LEFT PANEL: INPUTS --- */}
-        <aside className="w-full md:w-[400px] lg:w-[450px] bg-white border-r border-gray-200 flex flex-col z-20 shadow-xl h-full">
+        <aside className="w-full md:w-[400px] lg:w-[450px] bg-white border-r border-gray-200 flex flex-col z-20 shadow-xl shrink-0 h-auto md:h-full">
 
           {/* TABS */}
           <div className="flex border-b border-gray-200">
@@ -434,7 +438,7 @@ const App: React.FC = () => {
           </div>
 
           {/* Scrollable Content Area */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
+          <div className="flex-1 overflow-visible md:overflow-y-auto custom-scrollbar p-6 space-y-6">
 
             {/* Description Box */}
             {appMode === 'insight' ? (
@@ -544,7 +548,17 @@ const App: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <input ref={fileInputRef} type="file" multiple={appMode === 'insight'} className="hidden" accept="image/*" onChange={(e) => processFiles(e.target.files, false)} />
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple={appMode === 'insight'}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={(e) => {
+                      processFiles(e.target.files, false);
+                      e.target.value = ''; // Reset to allow re-selection
+                    }}
+                  />
                 </div>
               </section>
             </div>
@@ -611,7 +625,16 @@ const App: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <input ref={designRefInputRef} type="file" className="hidden" accept="image/*" onChange={(e) => processFiles(e.target.files, true)} />
+                  <input
+                    ref={designRefInputRef}
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={(e) => {
+                      processFiles(e.target.files, true);
+                      e.target.value = '';
+                    }}
+                  />
                 </section>
               </div>
             )}
@@ -745,9 +768,9 @@ const App: React.FC = () => {
             ) : (
               <button
                 onClick={handleCustomGenerate}
-                disabled={isAnalyzing || inputImages.length === 0 || !customPrompt.trim()}
+                disabled={isAnalyzing || inputImages.length === 0}
                 className={`w-full py-4 rounded-xl font-bold text-base shadow-lg flex items-center justify-center gap-2 transition-all transform active:scale-95
-                      ${isAnalyzing || inputImages.length === 0 || !customPrompt.trim()
+                      ${isAnalyzing || inputImages.length === 0
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     : 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-500/30 hover:shadow-purple-500/40'
                   }
@@ -760,7 +783,7 @@ const App: React.FC = () => {
         </aside>
 
         {/* --- RIGHT PANEL: RESULTS --- */}
-        <main className="flex-1 bg-gray-100/50 overflow-y-auto custom-scrollbar p-6 md:p-10 relative">
+        <main className="flex-1 bg-gray-100/50 overflow-visible md:overflow-y-auto custom-scrollbar p-6 md:p-10 relative">
 
           {/* Background Decoration */}
           <div className={`absolute top-0 left-0 w-full h-64 bg-gradient-to-b ${appMode === 'insight' ? 'from-indigo-100/50' : 'from-purple-100/50'} to-transparent pointer-events-none`}></div>
