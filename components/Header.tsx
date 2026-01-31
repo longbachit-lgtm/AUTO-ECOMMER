@@ -24,12 +24,40 @@ const Header: React.FC<HeaderProps> = ({ apiKeyInput, apiKeyReady, onApiKeyChang
             <MagicIcon />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900 tracking-tight">DesignRemix AI</h1>
-            <p className="text-xs text-gray-500 font-medium">Sáng tạo thiết kế với Gemini</p>
+            <h1 className="text-xl font-bold text-gray-900 tracking-tight">Product Creation</h1>
+
           </div>
         </div>
         <div className="hidden md:flex items-center gap-2">
-          {apiKeyReady && !isEditing ? (
+          {isEditing ? (
+            <>
+              <input
+                type="password"
+                value={apiKeyInput}
+                onChange={(e) => onApiKeyChange(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSave();
+                  }
+                }}
+                placeholder="Nhập Gemini API Key..."
+                className="px-3 py-1.5 border border-amber-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 outline-none w-64"
+                autoFocus
+              />
+              <button
+                onClick={handleSave}
+                className="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-medium transition-colors"
+              >
+                Lưu
+              </button>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition-colors"
+              >
+                Hủy
+              </button>
+            </>
+          ) : apiKeyReady ? (
             <>
               <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-200">
                 <CheckIcon />
@@ -43,35 +71,12 @@ const Header: React.FC<HeaderProps> = ({ apiKeyInput, apiKeyReady, onApiKeyChang
               </button>
             </>
           ) : (
-            <>
-              <input
-                type="password"
-                value={apiKeyInput}
-                onChange={(e) => onApiKeyChange(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSave();
-                  }
-                }}
-                placeholder="Nhập Gemini API Key..."
-                className="px-3 py-1.5 border border-amber-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 outline-none w-64"
-                autoFocus={isEditing}
-              />
-              <button
-                onClick={handleSave}
-                className="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-medium transition-colors"
-              >
-                Lưu
-              </button>
-              {apiKeyReady && (
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition-colors"
-                >
-                  Hủy
-                </button>
-              )}
-            </>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="px-3 py-1.5 bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-700 hover:border-gray-300 rounded-lg text-xs font-medium transition-colors"
+            >
+              Nhập API Key
+            </button>
           )}
         </div>
       </div>
